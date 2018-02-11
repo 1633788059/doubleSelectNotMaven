@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:c="http://www.springframework.org/schema/c" xmlns:cache="http://www.springframework.org/schema/cache" xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<!-- 配置数据源 -->
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
+
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="0" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="20" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="0" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 每个connection中缓存一定数量的preparestatement 用于减少statement对象和网络交互以及数据库cursor创建
+			<property name="poolPreparedStatements" value="true" />
+			<property name="maxPoolPreparedStatementPerConnectionSize" value="33" />
+		-->
+
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="1800" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+
+		<!-- 监控数据库 -->
+		<!-- <property name="filters" value="mergeStat" /> -->
+		<property name="filters" value="stat" />
+	</bean>
+
+	<!-- 配置hibernate session工厂 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+				<!-- 开启查询缓存 -->  
+			    <prop key="hibernate.cache.use_query_cache">true</prop>  
+			    <!-- 开启二级缓存 -->  
+			    <prop key="hibernate.cache.use_second_level_cache">true</prop>  
+			    <!-- 高速缓存提供程序 -->   
+			    <!-- 由于spring也使用了Ehcache, 保证双方都使用同一个缓存管理器 -->  
+			    <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>  
+			    
+			  <!--   configurationresourcename用于定义Ehcache配置文件位置，这是一个可选参数
+			    ，如果不是现在的Ehcache将在应用程序的类路径定位ehcache.xml文件。 -->
+		<!-- 	      <property name="net.sf.ehcache.configurationResourceName">/myehcache.xml</property> -->
+	<!-- 		    <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop> -->
+			</props>
+		</property>
+
+		<!-- 自动扫描注解方式配置的hibernate类文件 -->
+		<property name="packagesToScan">
+			<list>
+				<value>com.doubleselect.model</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean name="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+<!-- 此后，你在dao模块中注入sessionFactory的地方都注入hibernateTemplate即可 -->
+<!-- 	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+	    <property name="sessionFactory">
+	       <ref bean="sessionFactory" />
+	    </property>
+	    <property name="cacheQueries">
+	       <value>true</value>
+	    </property>
+	</bean> -->
+
+	<!-- 拦截器方式配置事物 -->
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 如果当前没有事务就新建一个事物，如果已经存在一个事务，加入到这个事务中 -->
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="append*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="edit*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+
+			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="search*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="datagrid*" propagation="REQUIRED" read-only="true" />
+
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<!--第一个*代表返回所有类型的返回值 -->
+		<!-- ..*.*(..)定义在service包或者子包里的任意类的任意方法的执行 -->
+		<aop:pointcut id="transactionPointcut" expression="execution(* com.doubleselect.service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
+	</aop:config>
+	
+	
+	<!-- 自定义Realm -->
+	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->
+	<!-- Shiro默认会使用Servlet容器的Session,可通过sessionMode属性来指定使用Shiro原生Session -->  
+	<!-- 即<property name="sessionMode" value="native"/>,详细说明见官方文档 -->  
+	<!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 --> 
+	<bean id="myRealm" class="com.doubleselect.util.realm.MyRealm"/>  
+	
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+  	  <property name="realm" ref="myRealm"/>  
+  	  <!-- 添加cache缓存 ,不需要每次查询那些路径满足shiro条件-->
+  	  	<property name="cacheManager" ref="cacheManager" />
+	</bean>  
+	
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
+	</bean>
+	
+	<!-- Shiro过滤器 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+	    <!-- Shiro的核心安全接口,这个属性是必须的 -->  
+	    <property name="securityManager" ref="securityManager"/>
+	    <!-- 身份认证失败，则跳转到登录页面的配置 -->  
+	    <property name="loginUrl" value="/"/> 
+	    
+	   <!--    <property name="successUrl" value="/system/main"/>  -->
+    	<!-- 用户访问未对其授权的资源时,所显示的连接 -->  
+    	<!-- 若想更明显的测试此属性可以修改它的值,如unauthor.jsp,然后用[玄玉]登录后访问/admin/listUser.jsp就看见浏览器会显示unauthor.jsp -->  
+   		 <property name="unauthorizedUrl" value="/404" /> 
+	    <!-- Shiro连接约束配置,即过滤链的定义 -->  
+	    <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->  
+    	<!-- anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种 -->  
+    	<!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter --> 
+    	   <!-- [上行的配置的覆盖下行的配置的] -->
+	  <!--  <property name="filterChainDefinitions">  
+	        <value>
+	        /student/studentmessage/studentmessage=authc,perms[student/studentmessage/studentmessage]
+	        /student/studentmessage/xinxi*=authc,perms[student/studentmessage/xinxi]
+				/login=anon
+				/volunteer/**=authc,roles[研究生]
+				/student/studentmessage/xinxi=authc,roles[导师],perms["student/studentmessage/xinxi"]
+				/teacher/**=authc
+				/student/**=roles[系统管理员]
+				 /student/studentmessage/uploadImage=authc,perms[student/studentmessage/uploadImage]
+	        </value>  
+	    </property>  -->
+	    
+	<!--     或者这种方法都可以自定义权限和控制,这3种方法都可以实现 -->
+	
+	   <!--   <property name="filterChainDefinitionMap" ref="filterChainFactoryBean" /> -->
+	  
+	  
+		<property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource" />
+	</bean>  
+	
+	<!-- 自定义权限和控制 -->
+ <!-- 	<bean id ="filterChainFactoryBean" class ="com.doubleselect.util.realm.FilterChainFactoryBean">
+		这里面不能写 <property name="filterChainDefinitions">这属性
+	</bean>
+	 -->
+		<bean id="chainDefinitionSectionMetaSource" class="com.doubleselect.util.realm.ChainDefinitionSectionMetaSource">
+	       
+	    <property name="filterChainDefinitions">
+	        <value>
+	        
+	        /login=anon
+			/doLogin=anon
+			/defined=anon
+			<!-- 这两个路径如果直接从后台得到，则在页面得不到路径，这里我也不知道原因只能从 -->
+	      	/student/studentmessage/uploadImage*=authc,perms[student/studentmessage/uploadImage]
+	      	/teacher/teachermessage/uploadImage*=authc,perms[teacher/teachermessage/uploadImage]
+	       
+	         <!--    /login.do = authc 
+	            /favicon.ico = anon
+	            /logout.do = logout
+	            /images/** = anon
+	            /css/** = anon
+	            /common/js/jquery-1.10.2.min.js = anon
+	            
+	            
+	            /selectOption.do = roles[index]
+	            /index.jsp = perms[index:index] -->
+	            
+	            <!-- /** = authc  --> 
+	            <!-- authc必须是验证过的,不能是"remember me",
+	            	而user可以是"remember me",只要Subject包含principal就行。 -->
+				
+	            
+	            <!-- 
+	            anon:  例子/admins/**=anon 没有参数，表示可以匿名使用。
+	            authc: 例如/admins/user/**=authc表示需要认证(登录)才能使用，没有参数
+	            authcBasic：例如/admins/user/**=authcBasic没有参数表示httpBasic认证
+	            user:例如/admins/user/**=user没有参数表示必须存在用户，当登入操作时不做检查
+	            
+	            roles：例子/admins/user/**=roles[admin],参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，当有多个参数时，例如admins/user/**=roles["admin,guest"],每个参数通过才算通过，相当于hasAllRoles()方法。
+	            perms：例子/admins/user/**=perms[user:add:*],参数可以写多个，多个时必须加上引号，并且参数之间用逗号分割，例如/admins/user/**=perms["user:add:*,user:modify:*"]，当有多个参数时必须每个参数都通过才通过，想当于isPermitedAll()方法。
+	            rest：  例子/admins/user/**=rest[user],根据请求的方法，相当于/admins/user/**=perms[user:method] ,其中method为post，get，delete等。
+				ssl:例子/admins/user/**=ssl没有参数，表示安全的url请求，协议为https
+				port：  例子/admins/user/**=port[8081],当请求的url的端口不是8081是跳转到schemal://serverName:8081?queryString,其中schmal是协议http或https等，serverName是你访问的host,8081是url配置里port的端口，queryString
+						是你访问的url里的？后面的参数。
+	                        注：anon，authcBasic，auchc，user是认证过滤器，
+					perms，roles，ssl，rest，port是授权过滤器
+	             -->
+	        </value>
+	    </property>
+	</bean> 
+	
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  
+	
+	<!-- 开启Shiro注解 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
+  		<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+  	  <property name="securityManager" ref="securityManager"/>  
+    </bean>  
+	
+
+	
+</beans>
