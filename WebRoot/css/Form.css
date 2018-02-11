@@ -1,0 +1,84 @@
+/*基本样式*/
+*{margin:0px; font-size:12px; font-family: "宋体";}
+body
+{  
+	background:#FEFEFF;COLOR:black;	
+}
+ 
+a {color:#660099;}
+a:link {color:#003399; text-decoration:none;}
+a:visited {color:#003399; text-decoration:none;}
+a:active {color:#990099;}
+a:hover {color:#5082E6;}
+
+img {border:0;}
+select{height:18px;}
+
+textarea {border:1px solid #CCCCCC;padding:2px;}
+
+.left {float:left}
+.right{float:right}
+.center{margin:auto;}
+.clear{clear:both; height:1px;}
+
+.noborder{border:0px;}
+.readonly{ background-color:#ccc;}
+
+.text_left  {border:1px solid #B3B5B4;text-align:left;padding:1px;}
+.text_center{border:1px solid #B3B5B4;text-align:center;padding:1px;}
+.text_right {border:1px solid #B3B5B4;text-align:right;padding:1px;}
+
+.input      {border:1px solid #B3B5B4;text-align:left;padding:1px;}
+/*.radio		{border:none;margin-bottom:-2px !important; margin:2px 0px -2px 0px;}
+.checkbox	{border:none;margin:0px !important; margin:2px 0px -2px 0px;}*/
+
+.radio		{border:none;}
+.checkbox	{border:none;}
+
+.button
+{
+	border:1px solid #CCCCCC;
+	background-color: #F5FAFF;/*F5FAFF*/
+	padding:2px 2px 0px 2px;
+}
+
+/*操作区*/
+#theOptArea {width:760px; margin:auto; padding-bottom:5px;}
+#divTitle {float:left; text-indent:6px; font-weight:bold; margin:8px 0px 0px 0px;}
+#divTip {float:left; text-indent:10px; text-align:center; color:red; margin:8px 0px 0px 0px;}
+#divButton {float:right;padding-right:7px;margin:3px 0px 2px 0px;}
+#divLine {clear:both; color:#77c;border-top:1px solid #ddd; padding-bottom:5px;}
+
+/*控件区*/
+#theSearchArea {width:100%; border:1px solid #B3B5B4; *border:1px outset #B3B5B4;}
+#theEditArea   {width:100%; border:1px outset #B3B5B4; margin-top:5px; margin-bottom:2px;padding-top:3px;padding-bottom:3px;}
+TD{padding-left:2px;padding-right:2px;}
+.tdLab{text-align:right;}
+
+/*表单区*/
+#theRptArea {height:100%; width:99%; margin:auto; border:1px dashed #B3B5B4; overflow:auto;}
+#frmReport  {height:100%; width:100%; border:0px solid #B3B5B4;}
+
+/*状态信息提示*/
+.loader{
+WIDTH: 150px; COLOR: white; BORDER-RIGHT: #abc 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #abc 1px solid; DISPLAY: block; 
+PADDING-LEFT: 0px; FONT-SIZE: 11px; Z-INDEX: 2; PADDING-BOTTOM: 16px; MARGIN: 0px auto; BORDER-LEFT: #abc 1px solid; 
+PADDING-TOP: 10px; BORDER-BOTTOM: #abc 1px solid; FONT-FAMILY: Tahoma, Helvetica, sans; BACKGROUND-COLOR: #6EB277; TEXT-ALIGN: left
+}
+.loader_bg{WIDTH: 133px;  FONT-SIZE: 1px; LEFT: 8px; POSITION: relative; TOP: 8px; HEIGHT: 7px; BACKGROUND-COLOR: #abc}
+.progress{FONT-SIZE: 1px; LEFT: 0px; WIDTH: 1px; POSITION: relative; TOP: 1px; HEIGHT: 5px; BACKGROUND-COLOR: #fff}
+
+/*按钮*/
+.but20down {border:0px;height:31px;width:30px;background-image:url(../images/button/down.gif);}
+.but20up {border:0px;height:31px;width:30px;background-image:url(../images/button/up.gif);}
+.but20left {border:0px;height:31px;width:30px;background-image:url(../images/button/left.gif);}
+.but20right {border:0px;height:31px;width:30px;background-image:url(../images/button/right.gif);}
+.but21left {border:0px;height:31px;width:30px;background-image:url(../images/button/left.jpg);}
+.but21right {border:0px;height:31px;width:30px;background-image:url(../images/button/right.jpg);}
+
+.toSelectPage {
+	border: 0px;
+	width: 14px;
+	height: 14px;
+    background-image: url(../images/tree/tree.gif);
+}

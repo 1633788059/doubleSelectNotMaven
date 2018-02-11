@@ -1,0 +1,42 @@
+﻿@charset "utf-8";
+/* CSS Document */
+a:hover { color: #EABC57 !important }
+.w{background:#fff !important;}
+.btn-gn{ background-color:#c49837 !important; border-color:#c49837 !important;}
+.btn-gn:hover{background-color:#d9aa43 !important;}
+
+/* 页头 */
+.site-nav .city .city-sz i,.site-nav .city .city-name s,.site-nav .city .city-con .city-hot dt i,.site-nav .city-hover .city-name s,.site-nav .fr li i,.site-nav .mobile .mobile-tit s ,.site-nav .mobile-hover .mobile-tit s,.myyiguo dt i,.shopping-btn i,.shopping-cart-cur .shopping-btn i,.product .b-buy i,.soldOut .p-soldOut a span i{background-image: url(../Content/img/themes/header-img.png) !important;}
+.site-nav .mobile-con .download a{background-color:#b98f03 !important}
+.logo a{ background:url(../Content/img/themes/logo.png) no-repeat !important;}
+
+/* 页尾 */
+.footer{ border-color:#c49837 !important;}
+.sitemap dl dt i{background-image: url(../Content/img/themes/footer-icon.png) !important;}
+.sitemap dl dd a:hover{ color: #EABC57 !important}
+
+/* 登录 */
+.logo .h-tit,.green{ color:#8f6e00 !important}
+.btn-green-l, .btn-green-s{ background-color:#c49837 !important;background:#c49837 !important}
+.btn-green-l:hover, .btn-green-s:hover{ background-color:#d9aa43 !important;background:#d9aa43 !important}
+.btn-white-s{ border-color:#c49837 !important; color:#c49837 !important}
+.btn-white-s:hover{ border-color:#d9aa43 !important; color:#d9aa43 !important;}
+.login{ border-color:#c49837 !important;border-bottom:none !important;}
+.p-login .login-btn a{background:#c49837 !important}
+.p-login .reg a{color:#8f6e00 !important}
+
+/* 注册 */
+.register .tab-content .tab-pane,.register .nav-tabs,.register .nav-tabs li a{ border-color:#e3d5a6 !important;}
+.register .nav-tabs .active a, .register .nav-tabs .active a:hover{background-image: url(../Content/img/themes/tab_bg_active.jpg) !important;}
+.btn-yzm{ color:#8f6e00 !important}
+.register .nav-tabs li a:hover{ color: #EABC57 !important}
+.protocol-poput .title{ color:#c49837 !important;border-color:#c49837 !important;}
+.popout-con{border-color:#c49837 !important;}
+.popout-con .btnbox a{border-color:#c49837 !important;}
+.protocol-poput .title .close,.protocol-poput .title .close:hover{background-image: url(../Content/img/themes/login.png) !important;}
+.register-succ{ border-top-color:#c49837 !important; color:#c49837 !important; background-color: #fdfbf7 !important;}
+
+/* 找回密码 */
+.login i, .register i, .forget-pwd i, .f-step,.register-succ i{background-image: url(../Content/img/themes/bg_login.png) !important;}
+.forget-pwd{ border-color:#e3d5a6 !important;border-bottom:none !important;}
+p.tips a{color:#d9aa43 !important;}
